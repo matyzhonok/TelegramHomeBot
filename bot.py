@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import telebot
 import config
 import datetime
@@ -8,7 +9,7 @@ import User
 import Utils
 import time
 
-Utils.sendLogMessage("Робот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
+Utils.sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
 
 
 # Инициализируем бота:
