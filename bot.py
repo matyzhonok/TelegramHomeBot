@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import telebot
 import config
+import config_local
 import datetime
 import pytz
 import json
@@ -15,7 +16,7 @@ Utils.sendLogMessage("Бот запущен", "INFO", "START", True) # Выво�
 # Инициализируем бота:
 P_TIMEZONE = pytz.timezone(config.TIMEZONE)
 TIMEZONE_COMMON_NAME = config.TIMEZONE_COMMON_NAME
-bot = telebot.TeleBot(config.TOKEN) # указываем токен конкретного бота
+bot = telebot.TeleBot(config_local.TOKEN) # указываем токен конкретного бота
 
 ##
 # Блок разбора конкретных команд бота
