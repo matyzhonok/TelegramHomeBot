@@ -1,0 +1,13 @@
+Description=Service for Telegram bot main. From user telebot
+
+[Service]
+# Даем знать systemd, что этот сервис представляет из себя лишь 1 процесс. Man page хорошо описывает доступные опции.
+Type=simple
+WorkingDirectory=/home/telebot/bot_prod/
+User=telebot
+Group=telebot
+# Выполнить эту команду при запуске сервиса.
+ExecStart=/home/telebot/bot_prod/bot.py
+
+[Install]
+WantedBy=multi-user.target
