@@ -1,0 +1,8 @@
+# Токен для подключения к телеграмму
+TOKEN = '1000000001:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+
+# Данные для подключения к базе данных
+DB_HOST = 'localhost'
+DB_USER = 'TeleBot'
+DB_PASS = 'password'
+DB_BASE = 'TeleBot'
