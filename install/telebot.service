@@ -1,13 +1,27 @@
+[Unit]
 Description=Service for Telegram bot main. From user telebot
-
-[Service]
-# Даем знать systemd, что этот сервис представляет из себя лишь 1 процесс. Man page хорошо описывает доступные опции.
-Type=simple
-WorkingDirectory=/home/telebot/bot_prod/
-User=telebot
-Group=telebot
-# Выполнить эту команду при запуске сервиса.
-ExecStart=/home/telebot/bot_prod/bot.py
+After=network.target
+# Для запуска сервиса нужен запущенный сервис MySQL (т.к. работаем с базой данных, расположенной на этом же сервере)
+After=mysql.service
+Requires=mysql.service
 
 [Install]
 WantedBy=multi-user.target
+
+[Service]
+# Даем знать systemd, что этот сервис представляет из себя лишь 1 процесс.
+# Ожидается, что процесс, настроенный с помощью ExecStart= является основным процессом службы
+Type=simple
+# Устанавливаем рабочую дирректорию службы
+WorkingDirectory=/home/telebot/bot_prod/
+# Указаываем пользователя и группу для работы службы
+User=telebot
+Group=telebot
+# Должна ли служба считаться активной, даже если все ее процессы завершены
+RemainAfterExit=no
+# Выполнить эту команду при запуске сервиса.
+ExecStart=/home/telebot/bot_prod/bot.py
+# Говорим, что нужно перезапускать сервис, если вдруг он умер
+Restart=on-failure
+# Таймаут на включение и выключение
+TimeoutSec=60
