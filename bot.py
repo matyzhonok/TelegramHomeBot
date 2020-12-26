@@ -9,6 +9,7 @@ import traceback
 import User
 import Utils
 import time
+import requests
 
 Utils.sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
 
@@ -54,6 +55,35 @@ def exchange_command(message):
         'Когда-нибудь я буду уметь высылать курсы валют... однако пока я этого не умею...\nПрости\nня',
         reply_markup=keyboard
     )
+
+@bot.message_handler(commands=['Led_Status'])
+def start_command(message):
+    if (User.isAuthorized(message.chat.id)):
+        response = requests.get('http://192.168.18.101/LED=status&API=yes')
+        str_led = response.text
+        bot.send_message(message.chat.id, "Статус светодиода: " + str_led)
+        return True
+
+@bot.message_handler(commands=['Led_On'])
+def start_command(message):
+    if (User.isAuthorized(message.chat.id)):
+        response = requests.get('http://192.168.18.101/LED=ON&API=yes')
+        bot.send_message(message.chat.id, "Статус запроса: " + response.status_code.__str__())
+        return True
+
+@bot.message_handler(commands=['Led_Off'])
+def start_command(message):
+    if (User.isAuthorized(message.chat.id)):
+        response = requests.get('http://192.168.18.101/LED=OFF&API=yes')
+        bot.send_message(message.chat.id, "Статус запроса: " + response.status_code.__str__())
+        return True
+
+@bot.message_handler(commands=['Arduino_status'])
+def start_command(message):
+    if (User.isAuthorized(message.chat.id)):
+        response = requests.get('http://192.168.18.101/main=status&API=yes')
+        bot.send_message(message.chat.id, response.text)
+        return True
 
 
 bot.polling(none_stop=True)
