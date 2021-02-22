@@ -1,2 +1,4 @@
 /config_local.py
 /venv
+/.idea
+*__pycache__
