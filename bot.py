@@ -21,9 +21,7 @@ Utils.sendLogMessage("Бот запущен", "INFO", "START", True) # Выво�
 P_TIMEZONE = pytz.timezone(config.TIMEZONE)
 TIMEZONE_COMMON_NAME = config.TIMEZONE_COMMON_NAME
 bot = telebot.TeleBot(config_local.TOKEN) # указываем токен конкретного бота
-
-sens = Arduino_sensor.Sensors.Sensors()
-sens.config()
+LITLE_HOME_IP = config.LITLE_HOME_IP
 
 ##
 # Блок разбора конкретных команд бота
@@ -44,24 +42,24 @@ def start_command(message):
 @bot.message_handler(commands=['menu'])
 def help_command(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
-    #keyboard.add(telebot.types.InlineKeyboardButton('Написать разработчику', url='telegram.me/matyzhonok'))
+    keyboard.add(telebot.types.InlineKeyboardButton('Написать разработчику', url='telegram.me/matyzhonok'))
     #keyboard.add(telebot.types.InlineKeyboardButton('Перечитать сенсоры', callback_data='Arduino_config_sensor'))
     #keyboard.add(telebot.types.InlineKeyboardButton('Статус светодиода', callback_data='Led_Status'))
     #keyboard.add(telebot.types.InlineKeyboardButton('Включить светодиод', callback_data='Led_On'),
     #             telebot.types.InlineKeyboardButton('Выключить светодиод', callback_data='Led_Off'))
-    #bot.send_message(message.chat.id, "Выберите действие", reply_markup=keyboard)
+    bot.send_message(message.chat.id, "Выберите действие", reply_markup=keyboard)
     print("Меню")
 
 @bot.message_handler(commands=['litlehome'])
 def LitleHome_menu(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
     bot.send_message(message.chat.id, "Управляем макетом домика")
-    keyboard.add(telebot.types.InlineKeyboardButton('Включить свет', callback_data='Floor_1_Led_On'),
-                 telebot.types.InlineKeyboardButton('Выключить свет', callback_data='Floor_1_Led_Off'))
+    keyboard.add(telebot.types.InlineKeyboardButton('Включить свет', callback_data='LitleHome_Floor_1_Led_On'),
+                 telebot.types.InlineKeyboardButton('Выключить свет', callback_data='LitleHome_Floor_1_Led_Off'))
     bot.send_message(message.chat.id, "1 этаж", reply_markup=keyboard)
     keyboard = telebot.types.InlineKeyboardMarkup()
-    keyboard.add(telebot.types.InlineKeyboardButton('Включить свет', callback_data='Floor_2_Led_On'),
-             telebot.types.InlineKeyboardButton('Выключить свет', callback_data='Floor_2_Led_Off'))
+    keyboard.add(telebot.types.InlineKeyboardButton('Включить свет', callback_data='LitleHome_Floor_2_Led_On'),
+             telebot.types.InlineKeyboardButton('Выключить свет', callback_data='LitleHome_Floor_2_Led_Off'))
     bot.send_message(message.chat.id, "2 этаж", reply_markup=keyboard)
 
 @bot.message_handler(commands=['Led_Status'])
@@ -93,7 +91,7 @@ def command_Arduino_config_sensors(message):
 
 def Drive_Arduino_Floor_Led(message, floor, action):
     if (User.isAuthorized(message.chat.id)):
-        response = requests.get('http://192.168.19.58/Floor_' + str(floor) + '/LED/' + action)
+        response = requests.get(LITLE_HOME_IP + '/Floor_' + str(floor) + '/LED/' + action)
         bot.send_message(message.chat.id, "Статус запроса: " + response.status_code.__str__())
         return True
 
@@ -103,6 +101,8 @@ def Drive_Arduino_Floor_Led(message, floor, action):
 def callback_inline(call):
     # Если сообщение из чата с ботом
     if call.message:
+        if call.data.startswith("Floor_1"):
+            print("Начинается с Floor_1")
         if call.data == "Arduino_config_sensor":
             command_Arduino_config_sensors(call.message)
             bot.answer_callback_query(call.id, text="Настройки сенсоров обновлены")
