@@ -1,0 +1,5 @@
+Необходимо установить пакеты:
+pyTelegramBotAPI
+telebot
+pytz
+requests

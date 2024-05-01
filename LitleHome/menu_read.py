@@ -1,3 +1,0 @@
-def menu_read() {
-
-}
