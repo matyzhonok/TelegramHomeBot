@@ -7,14 +7,13 @@ import pytz
 import json
 import traceback
 import User
-import Utils
+import Utils.logs
 import time
 import requests
+from Utils.logs import sendLogMessage
 
 
-
-
-Utils.sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
+sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
 
 
 # Инициализируем бота:
@@ -32,10 +31,10 @@ def start_command(message):
     if (User.isAuthorized(message.chat.id)):
         bot.send_message(message.chat.id, "Авторизация пройдена успешно. \n" +
                          "Приветствую тебя, " + User.getName(message.chat.id) + "!")
-        Utils.sendLogMessage("Пользователь _" + User.getName(message.chat.id) + "_ авторизировался", "INFO", "AUTH")
+        sendLogMessage("Пользователь _" + User.getName(message.chat.id) + "_ авторизировался", "INFO", "AUTH")
         return True
     bot.send_message(message.chat.id, 'Авторизация не пройдена, функционал ограничен.')
-    Utils.sendLogMessage("Пользователь _" + str(message.chat.id) + "_ НЕ авторизирован.", "INFO", "AUTH", True)
+    sendLogMessage("Пользователь _" + str(message.chat.id) + "_ НЕ авторизирован.", "INFO", "AUTH", True)
 
 # Команда HELP
 @bot.message_handler(commands=['menu'])
@@ -56,7 +55,7 @@ def callback_inline(call):
     if call.message:
         print(call.data)
 
-# А так мы обрабатываем просто текст
+# А так мы обрабатываем просто текст и те команды, которые боту неизвестны
 @bot.message_handler(content_types=['text'])
 def lalala(message):
     print(str(message.chat.id) + "|" + message.text + "|")
