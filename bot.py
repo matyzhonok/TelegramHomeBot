@@ -67,7 +67,13 @@ def callback_inline(call):
 
 # А так мы обрабатываем просто текст и те команды, которые боту неизвестны
 @bot.message_handler(content_types=['text'])
-def lalala(message):
+def processing_a_general_request(message):
+    user_context = context.get_context(message.chat.id)
+    if user_context == "OFZ":
+        print("Контекст ОФЗ")
+    if user_context == "main":
+        print("Контекст не установлен")
+
     print(str(message.chat.id) + "|" + message.text + "|" + str(context.get_context(message.chat.id)))
 
 bot.polling(none_stop=True)
