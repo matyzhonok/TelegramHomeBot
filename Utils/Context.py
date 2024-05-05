@@ -11,4 +11,4 @@ class Context:
 
     # Функция получения контента
     def get_context(self, user_id):
-        self.__contexts.get(user_id, "main") # Ищем контекст, если есть - взвращаем его, если нет - возвращаем main (главное меню)
+        return self.__contexts.get(user_id, "main") # Ищем контекст, если есть - взвращаем его, если нет - возвращаем main (главное меню)

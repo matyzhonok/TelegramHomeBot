@@ -20,6 +20,9 @@ P_TIMEZONE = pytz.timezone(config.TIMEZONE)
 TIMEZONE_COMMON_NAME = config.TIMEZONE_COMMON_NAME
 bot = telebot.TeleBot(config_local.TOKEN) # указываем токен конкретного бота
 
+# Инициализируем контексты
+context = Context()
+
 ##
 # Блок разбора конкретных команд бота
 ##
@@ -50,7 +53,8 @@ def help_command(message):
 # Команда на обработку ОФЗ
 @bot.message_handler(commands=['ofz'])
 def help_command(message):
-    print("Получена команда на начала расчёта ОФЗ")
+    context.set_context(message.chat.id, "OFZ")
+    print("Получена команда на начала расчёта ОФЗ, установлен нужный контекст")
 
 
 
@@ -64,6 +68,6 @@ def callback_inline(call):
 # А так мы обрабатываем просто текст и те команды, которые боту неизвестны
 @bot.message_handler(content_types=['text'])
 def lalala(message):
-    print(str(message.chat.id) + "|" + message.text + "|")
+    print(str(message.chat.id) + "|" + message.text + "|" + str(context.get_context(message.chat.id)))
 
 bot.polling(none_stop=True)
