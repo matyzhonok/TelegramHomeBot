@@ -48,6 +48,13 @@ def help_command(message):
     bot.send_message(message.chat.id, "Выберите действие", reply_markup=keyboard)
     print("Меню")
 
+# Команда на обработку ОФЗ
+@bot.message_handler(commands=['ofz'])
+def help_command(message):
+    print("Получена команда на начала расчёта ОФЗ")
+
+
+
 # Обрабатываем колбэки
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
