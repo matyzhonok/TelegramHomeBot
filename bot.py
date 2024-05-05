@@ -7,11 +7,10 @@ import pytz
 import json
 import traceback
 import User
-import Utils.logs
 import time
 import requests
 from Utils.logs import sendLogMessage
-
+from Utils.Context import Context
 
 sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
 
