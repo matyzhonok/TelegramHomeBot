@@ -11,6 +11,7 @@ import time
 import requests
 from Utils.logs import sendLogMessage
 from Utils.Context import Context
+from Utils.OFZ.OFZ import OFZ
 
 sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
 
@@ -22,6 +23,7 @@ bot = telebot.TeleBot(config_local.TOKEN) # указываем токен кон
 
 # Инициализируем контексты
 context = Context()
+ofz = {}
 
 ##
 # Блок разбора конкретных команд бота
@@ -55,6 +57,7 @@ def help_command(message):
 def help_command(message):
     context.set_context(message.chat.id, "OFZ")
     print("Получена команда на начала расчёта ОФЗ, установлен нужный контекст")
+    ofz[message.chat.id] = OFZ(message.chat.id)
 
 
 
@@ -71,9 +74,9 @@ def processing_a_general_request(message):
     user_context = context.get_context(message.chat.id)
     if user_context == "OFZ":
         print("Контекст ОФЗ")
+        ofz[message.chat.id].add_step(message.text)
     if user_context == "main":
         print("Контекст не установлен")
-
-    print(str(message.chat.id) + "|" + message.text + "|" + str(context.get_context(message.chat.id)))
+        print(str(message.chat.id) + "|" + message.text + "|" + str(context.get_context(message.chat.id)))
 
 bot.polling(none_stop=True)
