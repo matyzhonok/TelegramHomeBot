@@ -6,13 +6,13 @@ class OFZ_Manager:
 
     __ofz_list = {}
 
-    def __int__(self):
+    def __init__(self):
         print(" - Создан объект управления ОФЗ")
 
     def init_ofz_for_user(self, user_id):
-        self.__ofz_list[user_id] = OFZ(user_id)
+        self.__ofz_list[user_id] = OFZ()
         print("Создана заготовка ОФЗ для пользователя " + str(user_id))
-        sendOneMessage(self.__ofz_list[user_id].get_step_welcome_text, user_id)
+        sendOneMessage(str(self.__ofz_list[user_id].get_step_welcome_text()), user_id)
 
     def new_step_for_user(self, user_id, value):
         print("Новый шаг ОФЗ для пользователя " + str(user_id) + " со значением " + str(value) + ".")

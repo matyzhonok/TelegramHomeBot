@@ -22,10 +22,10 @@ TIMEZONE_COMMON_NAME = config.TIMEZONE_COMMON_NAME
 bot = telebot.TeleBot(config_local.TOKEN) # указываем токен конкретного бота
 
 print("Начальная инициализация всех необходимых объектов:")
-ofz_manager = OFZ_Manager()
 # Инициализируем контексты
 context = Context()
 # Инициализируем обработчик запросов на ОФЗ
+ofz_manager = OFZ_Manager()
 
 
 print("Начальная инициализация завершена.")
