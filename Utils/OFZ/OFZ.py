@@ -21,11 +21,15 @@ class OFZ:
 
     def __init__(self, user_id):
         self.__step = 0
-        sendOneMessage("Введите название ОФЗ",user_id)
+        self.get_step_welcome_text(user_id)
         print("Создан объект ОФЗ")
 
-    def get_step_welcome_text(self):
+    def get_step_welcome_text(self, user_id):
         print("Запрошена приветственная надпись")
+        if self.__step == self.__STEP_WAIT_NAME:
+            sendOneMessage("Введите название ОФЗ", user_id)
+        if self.__step == self.__STEP_WAIT_NOMINAL:
+            sendOneMessage("Введите номинал купона")
 
     def add_step(self, value):
         print("начат следующий шаг")
