@@ -11,7 +11,7 @@ import time
 import requests
 from Utils.logs import sendLogMessage
 from Utils.Context import Context
-from Utils.OFZ.OFZ import OFZ
+from Utils.OFZ.OFZ_Manager import OFZ_Manager
 
 sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
 
@@ -21,9 +21,16 @@ P_TIMEZONE = pytz.timezone(config.TIMEZONE)
 TIMEZONE_COMMON_NAME = config.TIMEZONE_COMMON_NAME
 bot = telebot.TeleBot(config_local.TOKEN) # указываем токен конкретного бота
 
+print("Начальная инициализация всех необходимых объектов:")
+ofz_manager = OFZ_Manager()
 # Инициализируем контексты
 context = Context()
-ofz = {}
+# Инициализируем обработчик запросов на ОФЗ
+
+
+print("Начальная инициализация завершена.")
+print("---------------------")
+print("")
 
 ##
 # Блок разбора конкретных команд бота
@@ -57,7 +64,7 @@ def help_command(message):
 def help_command(message):
     context.set_context(message.chat.id, "OFZ")
     print("Получена команда на начала расчёта ОФЗ, установлен нужный контекст")
-    ofz[message.chat.id] = OFZ(message.chat.id)
+    ofz_manager.init_ofz_for_user(message.chat.id)
 
 
 
@@ -74,7 +81,7 @@ def processing_a_general_request(message):
     user_context = context.get_context(message.chat.id)
     if user_context == "OFZ":
         print("Контекст ОФЗ")
-        ofz[message.chat.id].add_step(message.text)
+        ofz_manager.new_step_for_user(message.chat.id, message.text)
     if user_context == "main":
         print("Контекст не установлен")
         print(str(message.chat.id) + "|" + message.text + "|" + str(context.get_context(message.chat.id)))

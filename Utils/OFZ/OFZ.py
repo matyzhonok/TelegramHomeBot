@@ -19,32 +19,36 @@ class OFZ:
     __accumulated_coupon_income = 0 # Накопленный купонный доход
     __tax = 0.13 # Налоговая ставка на купонный доход
 
-    def __init__(self, user_id):
+    def __init__(self):
         self.__step = 0
-        self.get_step_welcome_text(user_id)
-        print("Создан объект ОФЗ")
 
-    def get_step_welcome_text(self, user_id):
-        print("Запрошена приветственная надпись")
+
+
+    def get_step_welcome_text(self):
         if self.__step == self.__STEP_WAIT_NAME:
-            sendOneMessage("Введите название ОФЗ", user_id)
+            return "Введите название ОФЗ"
         if self.__step == self.__STEP_WAIT_NOMINAL:
-            sendOneMessage("Введите номинал купона")
+            return "Введите номинал купона"
+        if self.__step == self.__STEP_WAIT_COUPON:
+            return ""
+        if self.__step == self.__STEP_WAIT_NUMBER_OF_COUPON:
+            return ""
+        if self.__step == self.__STEP_WAIT_ACCUMULATES_COUPON_INCOME:
+            return ""
+        if self.__step == self.__STEP_WAIT_TAX:
+            return ""
 
     def add_step(self, value):
         print("начат следующий шаг")
         if self.__step == self.__STEP_WAIT_NAME:
             self.__ofz_name = value
             self.__step = self.__step + 1
-            print("Это шаг получения имени ОФЗ")
             return True
         if self.__step == self.__STEP_WAIT_NOMINAL:
             self.__nominal = value
             self.__step = self.__step + 1
-            print("Это шаг получения номинала ОФЗ")
             return True
         if self.__step == self.__STEP_WAIT_COUPON:
             self.__coupon = value
             self.__step = self.__step + 1
-            print("Это шаг получения суммы купона")
             return True
