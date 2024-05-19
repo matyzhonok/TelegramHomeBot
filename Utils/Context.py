@@ -8,6 +8,7 @@ class Context:
     # Функция установки контента
     def set_context(self, user_id, context):
         self.__contexts[user_id] = context
+        print("Для пользователя " + str(user_id) + " установлен контекст " + str(context))
 
     # Функция получения контента
     def get_context(self, user_id):

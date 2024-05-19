@@ -63,7 +63,6 @@ def help_command(message):
 @bot.message_handler(commands=['ofz'])
 def help_command(message):
     context.set_context(message.chat.id, "OFZ")
-    print("Получена команда на начала расчёта ОФЗ, установлен нужный контекст")
     ofz_manager.init_ofz_for_user(message.chat.id)
 
 

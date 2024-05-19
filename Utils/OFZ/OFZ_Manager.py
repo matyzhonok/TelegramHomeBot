@@ -16,3 +16,8 @@ class OFZ_Manager:
 
     def new_step_for_user(self, user_id, value):
         print("Новый шаг ОФЗ для пользователя " + str(user_id) + " со значением " + str(value) + ".")
+        if self.__ofz_list[user_id].add_step(value):
+            sendOneMessage(str(self.__ofz_list[user_id].get_step_welcome_text()), user_id)
+        else:
+            sendOneMessage("Собраны все данные для расчёта ОФЗ", user_id)
+            sendOneMessage("Выгода от покупки 1 ОФЗ составит: " + str(self.__ofz_list[user_id].match_ofz()), user_id)
