@@ -7,20 +7,30 @@ import pytz
 import json
 import traceback
 import User
-import Utils
 import time
 import requests
+from Utils.logs import sendLogMessage
+from Utils.Context import Context
+from Utils.OFZ.OFZ_Manager import OFZ_Manager
 
-
-
-
-Utils.sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
+sendLogMessage("Бот запущен", "INFO", "START", True) # Выводим сообщение о начале работы бота
 
 
 # Инициализируем бота:
 P_TIMEZONE = pytz.timezone(config.TIMEZONE)
 TIMEZONE_COMMON_NAME = config.TIMEZONE_COMMON_NAME
 bot = telebot.TeleBot(config_local.TOKEN) # указываем токен конкретного бота
+
+print("Начальная инициализация всех необходимых объектов:")
+# Инициализируем контексты
+context = Context()
+# Инициализируем обработчик запросов на ОФЗ
+ofz_manager = OFZ_Manager()
+
+
+print("Начальная инициализация завершена.")
+print("---------------------")
+print("")
 
 ##
 # Блок разбора конкретных команд бота
@@ -32,10 +42,10 @@ def start_command(message):
     if (User.isAuthorized(message.chat.id)):
         bot.send_message(message.chat.id, "Авторизация пройдена успешно. \n" +
                          "Приветствую тебя, " + User.getName(message.chat.id) + "!")
-        Utils.sendLogMessage("Пользователь _" + User.getName(message.chat.id) + "_ авторизировался", "INFO", "AUTH")
+        sendLogMessage("Пользователь _" + User.getName(message.chat.id) + "_ авторизировался", "INFO", "AUTH")
         return True
     bot.send_message(message.chat.id, 'Авторизация не пройдена, функционал ограничен.')
-    Utils.sendLogMessage("Пользователь _" + str(message.chat.id) + "_ НЕ авторизирован.", "INFO", "AUTH", True)
+    sendLogMessage("Пользователь _" + str(message.chat.id) + "_ НЕ авторизирован.", "INFO", "AUTH", True)
 
 # Команда HELP
 @bot.message_handler(commands=['menu'])
@@ -49,6 +59,14 @@ def help_command(message):
     bot.send_message(message.chat.id, "Выберите действие", reply_markup=keyboard)
     print("Меню")
 
+# Команда на обработку ОФЗ
+@bot.message_handler(commands=['ofz'])
+def help_command(message):
+    context.set_context(message.chat.id, "OFZ")
+    ofz_manager.init_ofz_for_user(message.chat.id)
+
+
+
 # Обрабатываем колбэки
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
@@ -56,9 +74,18 @@ def callback_inline(call):
     if call.message:
         print(call.data)
 
-# А так мы обрабатываем просто текст
+# А так мы обрабатываем просто текст и те команды, которые боту неизвестны
 @bot.message_handler(content_types=['text'])
-def lalala(message):
-    print(str(message.chat.id) + "|" + message.text + "|")
+def processing_a_general_request(message):
+    user_context = context.get_context(message.chat.id)
+    if user_context == "OFZ":
+        print("Контекст ОФЗ")
+        if (ofz_manager.new_step_for_user(message.chat.id, message.text) == False):
+            context.set_context(message.chat.id, "main")
+    if user_context == "main":
+        print("Контекст не установлен")
+        print(str(message.chat.id) + "|" + message.text + "|" + str(context.get_context(message.chat.id)))
+        bot.send_message(message.chat.id, 'Извините, я вас не понимаю.\n'
+                                          'Выберите пожалуйста команду из меню.')
 
 bot.polling(none_stop=True)
