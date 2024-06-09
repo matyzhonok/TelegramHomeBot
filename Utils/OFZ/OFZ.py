@@ -1,5 +1,3 @@
-from Utils.send_one_message import sendOneMessage
-
 class OFZ:
     """Класс обработки расчёта ОФЗ"""
 

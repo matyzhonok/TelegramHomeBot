@@ -1,6 +1,7 @@
 from Utils.OFZ.OFZ import OFZ
 from Utils.send_one_message import sendOneMessage
 
+
 class OFZ_Manager:
     """Класс для обработки запросов на расчёт ОФЗ для всех пользователей"""
 
@@ -18,6 +19,8 @@ class OFZ_Manager:
         print("Новый шаг ОФЗ для пользователя " + str(user_id) + " со значением " + str(value) + ".")
         if self.__ofz_list[user_id].add_step(value):
             sendOneMessage(str(self.__ofz_list[user_id].get_step_welcome_text()), user_id)
+            return True
         else:
             sendOneMessage("Собраны все данные для расчёта ОФЗ", user_id)
             sendOneMessage("Выгода от покупки 1 ОФЗ составит: " + str(self.__ofz_list[user_id].match_ofz()), user_id)
+            return False

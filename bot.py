@@ -80,9 +80,12 @@ def processing_a_general_request(message):
     user_context = context.get_context(message.chat.id)
     if user_context == "OFZ":
         print("Контекст ОФЗ")
-        ofz_manager.new_step_for_user(message.chat.id, message.text)
+        if (ofz_manager.new_step_for_user(message.chat.id, message.text) == False):
+            context.set_context(message.chat.id, "main")
     if user_context == "main":
         print("Контекст не установлен")
         print(str(message.chat.id) + "|" + message.text + "|" + str(context.get_context(message.chat.id)))
+        bot.send_message(message.chat.id, 'Извините, я вас не понимаю.\n'
+                                          'Выберите пожалуйста команду из меню.')
 
 bot.polling(none_stop=True)
